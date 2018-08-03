@@ -64,8 +64,9 @@ def pick_sql_version():  # might be redundant
 
     # depending on the sql version path might vary
     version_d = {
-        '1': '120',
-        '2': '130'
+        '1': '',
+        '2': '120',
+        '3': '130'
     }
 
     # If invalid path is chosen fall back to default (120)

@@ -64,6 +64,7 @@ def pick_sql_version():  # might be redundant
 
     # depending on the sql version path might vary
     version_d = {
+        # TODO: add path for all SSMS versions
         '1': '',
         '2': '120',
         '3': '130'

@@ -3,3 +3,6 @@
 /py_linux
 /references
 /imgs/db_design.PNG
+/build
+/dist
+/ssms.spec

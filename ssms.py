@@ -2,6 +2,8 @@
 Purpose:Connect to SQL Server using Enterprise Manager with Windows Authentication
 Date                Programmer              Description
 July 20, 2018       Yury Stanev             Original
+
+TODO: convert to '.exe' using 'pyinstaller -F ssms.py' on Windows
 """
 
 import sqlite3  # creates connection to the DB file
@@ -23,6 +25,9 @@ def get_app_id():
     print(table)
 
     app_id = input("Pick app code: ")
+    while app_id == "":
+        app_id = input("Pick app code: ")
+
     return ''.join(app_id)
 
 
@@ -33,6 +38,9 @@ def get_group_id(app_id):
     print(table)
 
     group_id = input("Pick group ID: ")
+    while group_id == "":
+        group_id = input("Pick group ID: ")
+
     c.execute("SELECT DISTINCT name FROM groups WHERE id = '%s'" % group_id)
     group_id = c.fetchone()
 
@@ -48,6 +56,9 @@ def get_instance(app_id):
     print(table)
 
     instance_name = input("Pick instance name: ")
+    while instance_name == "":
+        instance_name = input("Pick instance name: ")
+
     c.execute("SELECT DISTINCT name FROM instances WHERE id = '%s'" % instance_name)
     instance_name = c.fetchone()
 
@@ -57,15 +68,18 @@ def get_instance(app_id):
 def pick_sql_version():  # might be redundant
 
     # create an easy list to pick from
-    sql_year = ['2008', '2014', '2016']
+    sql_year = ['2012', '2014', '2016']
     for i, val in enumerate(sql_year, start=1):
         print(i, " SQL Server Management Studio ", val)
+
     sql_version = input("Pick the SSMS version: ")
+    while sql_version == "":
+        sql_version = input("Pick the SSMS version: ")
 
     # depending on the sql version path might vary
     version_d = {
-        # TODO: add path for all SSMS versions
-        '1': '',
+        # TODO: add path for all SSMS versions - DONE
+        '1': '110',
         '2': '120',
         '3': '130'
     }
@@ -97,6 +111,7 @@ def start_ssms(command, pswd, instance_name):
 
     # click the 'Connect' button
     #  TODO: Get 'connect' button coordinates on 1920x1080 screen
+    #  TODO: Adjust screenshots for automation
     connect_button = pyautogui.locateOnScreen('imgs/connect_bt.png', grayscale=True, region=())
     connect_x, connect_y = pyautogui.center(connect_button)
     pyautogui.click(connect_x, connect_y, duration=0.75)

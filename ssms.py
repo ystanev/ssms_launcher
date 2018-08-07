@@ -85,7 +85,7 @@ def pick_sql_version():  # might be redundant
     }
 
     # If invalid path is chosen fall back to default (120)
-    path = 'C:/Program Files (x86)/Microsoft SQL Server/{}/Tools/Binn/ManagementStudio/Ssms.exe'.format(
+    path = '"C:/Program Files (x86)/Microsoft SQL Server/{}/Tools/Binn/ManagementStudio/Ssms.exe"'.format(
                                                                                     version_d.get(sql_version, '120'))
 
     return path
@@ -110,9 +110,9 @@ def start_ssms(command, pswd, instance_name):
     pyautogui.typewrite(instance_name)
 
     # click the 'Connect' button
-    #  TODO: Get 'connect' button coordinates on 1920x1080 screen
+    #  TODO: Get 'connect' button coordinates on 1920x1080 screen - DONE?
     #  TODO: Adjust screenshots for automation
-    connect_button = pyautogui.locateOnScreen('imgs/connect_bt.png', grayscale=True, region=())
+    connect_button = pyautogui.locateOnScreen('imgs/connect_bt.png', grayscale=True, region=(856, 556, 82, 33))
     connect_x, connect_y = pyautogui.center(connect_button)
     pyautogui.click(connect_x, connect_y, duration=0.75)
 

@@ -86,7 +86,7 @@ def pick_sql_version():  # might be redundant
 
     # If invalid path is chosen fall back to default (120)
     path = '"C:/Program Files (x86)/Microsoft SQL Server/{}/Tools/Binn/ManagementStudio/Ssms.exe"'.format(
-                                                                                    version_d.get(sql_version, '120'))
+        version_d.get(sql_version, '120'))
 
     return path
 
@@ -97,7 +97,12 @@ def command_builder(path, group_id):  # builds a command used to launch SSMS
 
 
 def start_ssms(command, pswd, instance_name):
-    subprocess.Popen(['C:/Windows/System32/cmd.exe'], stdin=subprocess.DEVNULL)  # 'opens cmd.exe'
+
+    # subprocess.CREATE_NEW_CONSOLE
+    # The new process has a new console, instead of inheriting its parent’s console (the default).
+
+    subprocess.Popen(['C:/Windows/System32/cmd.exe'], stdin=subprocess.DEVNULL,
+                     creationflags=subprocess.CREATE_NEW_CONSOLE)  # 'opens cmd.exe'
     time.sleep(1)
     pyautogui.typewrite(command)  # enters the command to start SSMS
     pyautogui.press('enter')

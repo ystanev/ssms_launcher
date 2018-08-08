@@ -98,12 +98,10 @@ def command_builder(path, group_id):  # builds a command used to launch SSMS
 
 def start_ssms(command, pswd, instance_name):
 
-    # subprocess.CREATE_NEW_CONSOLE
-    # The new process has a new console, instead of inheriting its parent’s console (the default).
-
-    subprocess.Popen(['C:/Windows/System32/cmd.exe'], stdin=subprocess.DEVNULL,
-                     creationflags=subprocess.CREATE_NEW_CONSOLE)  # 'opens cmd.exe'
+    # subprocess.Popen(['C:/Windows/System32/cmd.exe'], stdin=subprocess.DEVNULL)  # 'opens cmd.exe'
+    subprocess.Popen(['start', '/wait', 'cmd'], shell=True)
     time.sleep(1)
+
     pyautogui.typewrite(command)  # enters the command to start SSMS
     pyautogui.press('enter')
     pyautogui.typewrite(pswd)  # enter password

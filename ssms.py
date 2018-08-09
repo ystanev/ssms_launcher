@@ -2,7 +2,6 @@
 Purpose:Connect to SQL Server using Enterprise Manager with Windows Authentication
 Date                Programmer              Description
 July 20, 2018       Yury Stanev             Original
-
 TODO: convert to '.exe' using 'pyinstaller -F ssms.py' on Windows
 """
 
@@ -107,17 +106,21 @@ def start_ssms(command, pswd, instance_name):
     pyautogui.typewrite(pswd)  # enter password
     pyautogui.press('enter')
 
-    time.sleep(15)  # waiting for SSMS to start
+    # print (instance_name)
+
+    time.sleep(35)  # waiting for SSMS to start
 
     # because SSMS defaults to entering instance name after start
+    # pyautogui.press('backspace')
     pyautogui.typewrite(instance_name)
+    pyautogui.press('enter')  # press 'enter' to connect to instance
 
     # click the 'Connect' button
     #  TODO: Get 'connect' button coordinates on 1920x1080 screen - DONE?
     #  TODO: Adjust screenshots for automation
-    connect_button = pyautogui.locateOnScreen('imgs/connect_bt.png', grayscale=True, region=(856, 556, 82, 33))
-    connect_x, connect_y = pyautogui.center(connect_button)
-    pyautogui.click(connect_x, connect_y, duration=0.75)
+    # connect_button = pyautogui.locateOnScreen('imgs/connect_bt.png', grayscale=True, region=(856, 556, 82, 33))
+    # connect_x, connect_y = pyautogui.center(connect_button)
+    # pyautogui.click(connect_x, connect_y, duration=0.75)
 
 
 # Functions Calls

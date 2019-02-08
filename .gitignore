@@ -1,6 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 /.idea
 /py_linux
+/py_windows
 /references
 /imgs/db_design.PNG
 /build

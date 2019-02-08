@@ -2,7 +2,6 @@
 Purpose:Connect to SQL Server using Enterprise Manager with Windows Authentication
 Date                Programmer              Description
 July 20, 2018       Yury Stanev             Original
-
 TODO: convert to '.exe' using 'pyinstaller -F ssms.py' on Windows
 """
 
@@ -28,7 +27,7 @@ def get_app_id():
     while app_id == "":
         app_id = input("Pick app code: ")
 
-    return ''.join(app_id)
+    return ''.join(app_id)  # ''.join() is used to convert a tuple to a string
 
 
 def get_group_id(app_id):
@@ -46,7 +45,7 @@ def get_group_id(app_id):
 
     pswd = getpass.getpass()  # have to use 'terminal', default prompt: 'Password: '
 
-    return ''.join(group_id), pswd  # ''.join() is used to convert a tuple to a string
+    return ''.join(group_id), pswd
 
 
 def get_instance(app_id):
@@ -62,11 +61,10 @@ def get_instance(app_id):
     c.execute("SELECT DISTINCT name FROM instances WHERE id = '%s'" % instance_name)
     instance_name = c.fetchone()
 
-    return ''.join(instance_name)  # ''.join() is used to convert a tuple to a string
+    return ''.join(instance_name)
 
 
-def pick_sql_version():  # might be redundant
-
+def pick_sql_version(instance_name):
     # create an easy list to pick from
     sql_year = ['2012', '2014', '2016']
     for i, val in enumerate(sql_year, start=1):
@@ -78,15 +76,14 @@ def pick_sql_version():  # might be redundant
 
     # depending on the sql version path might vary
     version_d = {
-        # TODO: add path for all SSMS versions - DONE
         '1': '110',
         '2': '120',
         '3': '130'
     }
 
     # If invalid path is chosen fall back to default (120)
-    path = '"C:/Program Files (x86)/Microsoft SQL Server/{}/Tools/Binn/ManagementStudio/Ssms.exe"'.format(
-        version_d.get(sql_version, '120'))
+    path = '"C:/Program Files (x86)/Microsoft SQL Server/{}/Tools/Binn/ManagementStudio/Ssms.exe -S '.format(
+        version_d.get(sql_version, '120')) + instance_name + '"'
 
     return path
 
@@ -96,40 +93,24 @@ def command_builder(path, group_id):  # builds a command used to launch SSMS
     return command
 
 
-def start_ssms(command, pswd, instance_name):
-
-    # subprocess.CREATE_NEW_CONSOLE
-    # The new process has a new console, instead of inheriting its parent’s console (the default).
-
-    subprocess.Popen(['C:/Windows/System32/cmd.exe'], stdin=subprocess.DEVNULL,
-                     creationflags=subprocess.CREATE_NEW_CONSOLE)  # 'opens cmd.exe'
+def start_ssms(command, pswd):
+    subprocess.Popen(['start', '/wait', 'cmd'], shell=True)
     time.sleep(1)
+
     pyautogui.typewrite(command)  # enters the command to start SSMS
     pyautogui.press('enter')
     pyautogui.typewrite(pswd)  # enter password
     pyautogui.press('enter')
-
-    time.sleep(15)  # waiting for SSMS to start
-
-    # because SSMS defaults to entering instance name after start
-    pyautogui.typewrite(instance_name)
-
-    # click the 'Connect' button
-    #  TODO: Get 'connect' button coordinates on 1920x1080 screen - DONE?
-    #  TODO: Adjust screenshots for automation
-    connect_button = pyautogui.locateOnScreen('imgs/connect_bt.png', grayscale=True, region=(856, 556, 82, 33))
-    connect_x, connect_y = pyautogui.center(connect_button)
-    pyautogui.click(connect_x, connect_y, duration=0.75)
 
 
 # Functions Calls
 def main():
     app_id = get_app_id()  # stores returned value, allows values to be passed around and accessed later
     instance = get_instance(app_id)
-    path = pick_sql_version()
+    path = pick_sql_version(instance)
     group_id, pswd = get_group_id(app_id)
     command = command_builder(path, group_id)
-    start_ssms(command, pswd, instance)
+    start_ssms(command, pswd)
 
 
 main()
